@@ -6,12 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
   var checkoutButton = document.getElementById("buy-button");
 
   var purchase = {
-    amount: 1099,
-    id: 123,
+    id: "6009ccba47d2de84219a0475",
   };
 
   checkoutButton.addEventListener("click", function () {
-    fetch("/create-checkout-front", {
+    fetch("/create-checkout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
