@@ -23,47 +23,52 @@ const get = (items) => {
 };
 
 router.post("/create-checkout", async (req, res) => {
-  let id = req.body.id;
-  let quantity = 1;
-  let data = await mongoUtil.getProductByID(id);
+  try {
+    let id = req.body.id;
+    let quantity = 1;
+    let data = await mongoUtil.getProductByID(id);
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: data.name,
-            images: [
-              "https://cdn3.volusion.com/9nxdj.fchy5/v/vspfiles/photos/DG-332-2.jpg?v-cache=1602075128",
-            ],
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: data.name,
+              images: [
+                "https://cdn3.volusion.com/9nxdj.fchy5/v/vspfiles/photos/DG-332-2.jpg?v-cache=1602075128",
+              ],
+            },
+            unit_amount: data.price,
           },
-          unit_amount: data.price,
+          quantity,
         },
-        quantity,
-      },
-    ],
-    mode: "payment",
-    success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${YOUR_DOMAIN}/cancel?session_id={CHECKOUT_SESSION_ID}`,
-  });
+      ],
+      mode: "payment",
+      success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${YOUR_DOMAIN}/cancel?session_id={CHECKOUT_SESSION_ID}`,
+    });
 
-  mongoUtil.registerTransaction({
-    transactionID: session.id,
-    productId: id,
-    customer: session.customer,
-    payment_status: session.payment_status,
-    date: new Date(),
-    amount_total: session.amount_total,
-  });
+    mongoUtil.registerTransaction({
+      transactionID: session.id,
+      productId: id,
+      customer: session.customer,
+      payment_status: session.payment_status,
+      date: new Date(),
+      amount_total: session.amount_total,
+    });
 
-  res.json({ id: session.id });
+    res.json({ id: session.id });
+  }
+  catch{
+    res.send(JSON.stringify({error: 'Given data is incorrect or have been modify.'}));
+  }
 });
 
-router.post("/update-checkout",  async (req, res) => {
+router.post("/update-checkout", async (req, res) => {
   mongoUtil.updateTransaction(req.body.transactionID);
-  res.send('Updated');
+  res.send("Updated");
 });
 
 // exportamos a app.js
