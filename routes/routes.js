@@ -7,7 +7,19 @@ const stripe = require("stripe")(
 const mongoUtil = require("../db");
 
 router.get("/", (req, res) => {
-  res.render("pages/payment");
+  res.render("pages/payment", {
+    head: "../partials/head.ejs",
+  });
+});
+router.get("/product", (req, res) => {
+  res.render("pages/product", {
+    head: "../partials/head.ejs",
+  });
+});
+router.get("/search", (req, res) => {
+  res.render("pages/search", {
+    head: "../partials/head.ejs",
+  });
 });
 router.get("/cancel", (req, res) => {
   res.render("pages/cancel");
@@ -17,15 +29,9 @@ router.get("/success", (req, res) => {
 });
 
 var YOUR_DOMAIN = "http://localhost:3000";
-
-const get = (items) => {
-  return 1400;
-};
-
 router.post("/create-checkout", async (req, res) => {
   try {
-    let id = req.body.id;
-    let quantity = 1;
+    let { id, quantity } = req.body;
     let data = await mongoUtil.getProductByID(id);
 
     const session = await stripe.checkout.sessions.create({
@@ -60,15 +66,67 @@ router.post("/create-checkout", async (req, res) => {
     });
 
     res.json({ id: session.id });
-  }
-  catch{
-    res.send(JSON.stringify({error: 'Given data is incorrect or have been modify.'}));
+  } catch (err) {
+    console.log(err);
+    res.json({ error: "Server Error." });
   }
 });
 
 router.post("/update-checkout", async (req, res) => {
-  mongoUtil.updateTransaction(req.body.transactionID);
-  res.send("Updated");
+  try {
+    mongoUtil.updateTransaction(req.body.transactionID);
+    res.send("Updated");
+  } catch (err) {
+    console.log(err);
+    res.send("Server error.");
+  }
+});
+
+router.post("/get-product", async (req, res) => {
+  try {
+    let { productID } = req.body;
+    let product = await mongoUtil.getProductByID(productID);
+    res.json(product);
+  } catch (err) {
+    console.log(err);
+    res.json({error: "Elemento no encontrado."});
+  }
+});
+router.post("/update-product", async (req, res) => {
+  try {
+    await mongoUtil.updateProduct(req.body.productID,{
+      name: req.body.actualProduct_name,
+      price: (req.body.actualProduct_price*100).toFixed(),
+      description: req.body.actualProduct_description,
+    });
+    res.json(req.body);
+  } catch (err) {
+    console.log(err);
+    res.json({error: "Error."});
+  }
+});
+router.post("/remove-product", async (req, res) => {
+  try {
+    let { productID } = req.body;
+    await mongoUtil.removeProduct(productID);
+    res.json(req.body);
+  } catch (err) {
+    console.log(err);
+    res.json({error: "Elemento no encontrado."});
+  }
+});
+router.post("/create-product", async (req, res) => {
+  try {
+    let product = await mongoUtil.createProduct({
+      name: req.body.actualProduct_name,
+      price: (req.body.actualProduct_price*100).toFixed(),
+      description: req.body.actualProduct_description,
+    });
+    res.json(product);
+  } catch (err) {
+    console.log(err);
+    res.send("Server error.");
+  }
 });
 
 // exportamos a app.js

@@ -1,0 +1,21 @@
+.bg-peachpuff {
+  background-color: peachpuff;
+}
+.container-smp {
+  max-width: 15rem;
+}
+@media only screen and (max-width: 480px) {
+  .container-smp {
+    max-width: 40rem;
+  }
+}
+.material-icons:hover{
+  cursor: pointer;
+  transform: scale(1.2);
+}
+.hov-red:hover{
+  color: #ac0000;
+}
+.hov-blue:hover{
+  color: #17a2b8;
+}
