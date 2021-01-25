@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   var purchase = {
     id: "6009ccba47d2de84219a0475",
+    quantity: 1
   };
 
   checkoutButton.addEventListener("click", function () {
@@ -21,15 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.json();
       })
       .then(function (session) {
-        return stripe.redirectToCheckout({ sessionId: session.id });
-      })
-      .then(function (result) {
-        if (result.error) {
-          alert(result.error.message);
+        if (session.error) {
+          alert(session.error);
+          return;
         }
-      })
-      .catch(function (error) {
-        console.error("Error:", error);
+        return stripe.redirectToCheckout({ sessionId: session.id });
       });
   });
 });
