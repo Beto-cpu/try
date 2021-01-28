@@ -1,15 +1,16 @@
 $("document").ready(function () {
   const params = new URLSearchParams(window.location.search);
-  let productID = params.get("productID");
-  if (productID) {
-    $.post("/get-product", window.location.search, function (res) {
-      if (res.error) {
-        alert(res.error);
-      } else {
-        $("#actualProduct_id").text(res._id);
-        $("#actualProduct_name").text(res.name);
-        $("#actualProduct_price").text(`${res.price / 100}`);
-        $("#actualProduct_description").text(res.description);
+  let id = params.get("id");
+  if (id) {
+    $.ajax({
+      url: "/products/" + id,
+      type: "GET",
+      success: function (res) {
+        // console.log(res);
+        $("#id").text(res._id);
+        $("#name").text(res.name);
+        $("#price").text(`${res.price / 100}`);
+        $("#description").text(res.description);
 
         let info = $("#product_info").html();
 
@@ -30,40 +31,48 @@ $("document").ready(function () {
 
         $("#actualProduct").validate({
           rules: {
-            actualProduct_name: "required",
-            actualProduct_price: "required",
+            name: "required",
+            price: "required",
           },
           messages: {
-            actualProduct_name: "required",
-            actualProduct_price: "required",
+            name: "required",
+            price: "required",
           },
         });
 
-        $('#delete_submit').click(function(event){
+        $("#delete_submit").click(function (event) {
           event.preventDefault();
-          $.post("/remove-product", window.location.search, function (res) {
-            if (res.error) {
-              alert(res.error);
-            } else {
-              window.location = `/search`;
+
+          $.ajax({
+            url: "/products/" + id,
+            type: "DELETE",
+            error: function(err){
+                alert(err);
+              },
+            success: function(v){
+              window.location = '/search';
             }
           });
         });
-        $('#edit_submit').click(function(event){
-          event.preventDefault();
-          $("#product-form").submit();
 
-          if($("#actualProduct").valid()){
-            $.post("/update-product", $("#actualProduct").serialize()+window.location.search.slice(1), function (res) {
-              if (res.error) {
-                alert(res.error);
-              } else {
-                window.location.reload();
+        $("#edit_submit").click(function (event) {
+          event.preventDefault();
+
+          if ($("#actualProduct").valid()) {
+            $.ajax({
+              url: "/products/" + id,
+              type: "PUT",
+              data: $("#actualProduct").serialize(),
+              error: function(err){
+                alert(err);
+              },
+              success: function(v){
+                 window.location.reload();
               }
             });
           }
         });
-      }
+      },
     });
   }
 });

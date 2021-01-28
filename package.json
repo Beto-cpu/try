@@ -1,13 +1,13 @@
 {
-  "name": "microcertificate",
+  "name": "online-payments",
   "version": "1.0.0",
-  "description": "Sistema para otorgar microcertificados para CETYS-CEID a traves de seguimiento de cursos",
+  "description": "Sistema generar cobros online",
   "main": "app.js",
   "scripts": {
     "test": "nodemon app.js",
     "start": "node app.js"
   },
-  "author": "Alvaro Moreno",
+  "author": "Beto Munguia",
   "license": "ISC",
   "devDependencies": {
     "dotenv": "^8.2.0",
@@ -18,8 +18,8 @@
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
-    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.13",
     "mysql": "^2.18.1",
-    "stripe": "^8.131.1"
+    "stripe": "^8.132.0"
   }
 }

@@ -15,23 +15,25 @@
 
 <body class="bg-peachpuff">
   <main>
-    <form id="actualProduct" class="card mx-auto my-3 container">
-      <img class="card-img-top container-smp d-block mx-auto mx-3" src="https://cdn3.volusion.com/9nxdj.fchy5/v/vspfiles/photos/DG-332-2.jpg?v-cache=1602075128" alt="Card image cap">
-      <span id="edit" class="material-icons ml-auto mr-5 hov-blue" style="font-size: 2rem;">edit</span>
-      <span id="cancel" class="material-icons ml-auto mr-5 hov-red toEdit" style="font-size: 2rem; display: none;">cancel</span>
-      
-      <div id="product_info" class="card-body">
-        <h5 class="mr-1">ID: <span id="actualProduct_id"></span></h5> 
-        <h5 class="mr-1">Name: <span class="edit_input" id="actualProduct_name"></span></h5> 
-        <h6 class="mr-1">Price: $<span class="edit_input" id="actualProduct_price"></span></h6> 
-        <p class="m-0">Description:</p>
-        <span id="actualProduct_description" class="m-0 edit_input"></span>
-      </div>
-      <div class="d-flex justify-content-around">
-        <button type="submit" id="delete_submit" class="btn btn-danger m-2 w-25 toEdit" style="display: none;">Delete</button>
-        <button type="submit" id="edit_submit" class="btn btn-info m-2 w-25 toEdit" style="display: none;">Update</button>
-      </div>
-    </form>
+    <div class="mx-auto my-3 container">
+      <form id="actualProduct" class="card container-fluid">
+        <img class="card-img-top container-smp d-block mx-auto mx-3" src="https://cdn3.volusion.com/9nxdj.fchy5/v/vspfiles/photos/DG-332-2.jpg?v-cache=1602075128" alt="Card image cap">
+        <span id="edit" class="material-icons ml-auto mr-5 hov-blue" style="font-size: 2rem;">edit</span>
+        <span id="cancel" class="material-icons ml-auto mr-5 hov-red toEdit" style="font-size: 2rem; display: none;">cancel</span>
+        
+        <div id="product_info" class="card-body">
+          <h5 class="mr-1">ID: <span id="id"></span></h5> 
+          <h5 class="mr-1">Name: <span class="edit_input" id="name"></span></h5> 
+          <h6 class="mr-1">Price: $<span class="edit_input" id="price"></span></h6> 
+          <p class="m-0">Description:</p>
+          <span id="description" class="m-0 edit_input"></span>
+        </div>
+        <div class="d-flex justify-content-around">
+          <button type="submit" id="delete_submit" class="btn btn-danger m-2 w-25 toEdit" style="display: none;">Delete</button>
+          <button type="submit" id="edit_submit" class="btn btn-info m-2 w-25 toEdit" style="display: none;">Update</button>
+        </div>
+      </form>
+    </div>
   </main>
 </body>
 </html>

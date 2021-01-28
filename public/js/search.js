@@ -1,17 +1,22 @@
 $("document").ready(function () {
-  $("#product-form").validate({
+  $("#product-form").submit(function(e) {
+    e.preventDefault();
+  }).validate({
     rules: {
-      productID: "required",
+      id: "required",
     },
     messages: {
-      productID: "Ingrese el id del producto.",
+      id: "Ingrese el id del producto.",
     },
     submitHandler: function (form) {
-      $.post("/get-product", $("#product-form").serialize(), function (res) {
-        if (res.error) {
-          alert(res.error);
-        } else {
-          window.location = `/product?&productID=${res._id.toString()}`;
+      $.ajax({
+        url: "/products/" + $('#id').val(),
+        type: "GET",
+        error: function(err){
+            alert('ID no coincide con ningún producto');
+          },
+        success: function(res){
+          window.location = `/product?id=${res._id.toString()}`;
         }
       });
     },
@@ -27,11 +32,15 @@ $("document").ready(function () {
       actualProduct_price: "required",
     },
     submitHandler: function (form) {
-      $.post("/create-product", $("#actualProduct").serialize(), function (res) {
-        if (res.error) {
-          alert(res.error);
-        } else {
-          alert('Product Created with the ID '+res.insertedId);
+      $.ajax({
+        url: "/products",
+        type: "POST",
+        data: $("#actualProduct").serialize(),
+        error: function(err){
+            alert(err);
+        },
+        success: function(res){
+          alert('Product Created with the ID '+res._id);
           window.location.reload();
         }
       });
